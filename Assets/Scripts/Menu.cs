@@ -14,11 +14,10 @@ public class Menu : NetworkBehaviour
 
     public void FightPress()
     {
-        Debug.Log("You pressed the FIGHT button.");
         BattleManager.instance.menu.SetActive(false);
         BattleManager.instance.abilitySelector.SetActive(true);
+        Debug.Log("You pressed the FIGHT button.");
     }
-   //
     
     #region Start & Stop Callbacks
 

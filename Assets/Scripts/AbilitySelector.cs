@@ -58,9 +58,8 @@ public class AbilitySelector : NetworkBehaviour
     /// </summary>
     public override void OnStartServer() {
         
-        BattleManager.instance.abilitySelector.SetActive(false);
-        Debug.Log("Hello???????");
-        BattleManager.instance.abilitySelector.GetComponentInChildren<Text>().text = "la di da";
+        //BattleManager.instance.abilitySelector.SetActive(false);
+        //BattleManager.instance.abilitySelector.GetComponentInChildren<Text>().text = "la di da";
 
 
 
@@ -78,7 +77,10 @@ public class AbilitySelector : NetworkBehaviour
     /// </summary>
     public override void OnStartClient() 
     {
-
+        BattleManager.instance.abilitySelector = gameObject;
+        Debug.Log("Ability Selector Set");
+        BattleManager.instance.abilitySelector.SetActive(false);
+        
     }
 
     /// <summary>

@@ -12,6 +12,8 @@ using System;
 
 public class Player : NetworkBehaviour
 {
+    public GameObject battleCharPrefab;
+    public Transform[] charSpawns;
 
     [SyncVar]
     public int playerNo;
@@ -70,14 +72,7 @@ public class Player : NetworkBehaviour
     /// </summary>
     public override void OnStartClient()
     {
-        //instance = this;
 
-        // Flips the second player object so it faces left
-        SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
-        if (playerNo == 2)
-        {
-            spriteRenderer.flipX = true;
-        }
 
     }
 
@@ -94,6 +89,7 @@ public class Player : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         CmdAddPlayer();
+        CmdAddBattleChar();
     }
 
     /// <summary>
@@ -114,10 +110,28 @@ public class Player : NetworkBehaviour
     [Command]
     void CmdAddPlayer()
     {
-        Player player = gameObject.GetComponent<Player>();
+        //Player player = gameObject.GetComponent<Player>();
+        Player player = this;
         BattleManager.instance.players.Add(player);
         if (BattleManager.instance.players.Count == 2)
             BattleManager.instance.BattleStart();
+    }
+
+    [Command]
+    void CmdAddBattleChar()
+    {
+        for (int i = 0; i <= 2; i++)
+        {
+            
+            GameObject battleCharObject = Instantiate(battleCharPrefab, charSpawns[i].position, charSpawns[i].rotation);
+            Debug.Log("Instantiated BattleChar prefab");
+            BattleChar battleChar = battleCharObject.GetComponent<BattleChar>();
+            BattleManager.instance.battleChars.Add(battleChar);
+            battleChar.owner = this;
+            NetworkServer.Spawn(battleCharObject);
+            Debug.Log("Spawned BattleChar prefab");
+        }
+
     }
 
     [Command]
@@ -155,10 +169,8 @@ public class Player : NetworkBehaviour
     //public void CmdActOnTarget(Player initiator, Player target, Ability ability)
     public void CmdActOnTarget()
     {
-
         Debug.Log("Acting on Target");
         float multiplier = BattleManager.instance.activePlayer.strenth / BattleManager.instance.activePlayer.target.defense;
         BattleManager.instance.activePlayer.target.health += Convert.ToInt32(Math.Floor(multiplier * BattleManager.instance.activePlayer.selectedAbility.healthEffect));
-
     }
 }

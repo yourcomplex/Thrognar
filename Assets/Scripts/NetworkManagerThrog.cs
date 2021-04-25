@@ -263,6 +263,7 @@ public class NetworkManagerThrog : NetworkManager
         // Manager but you can use different prefabs per race for example
         Transform start = numPlayers == 0 ? leftPlayerSpawn : rightPlayerSpawn;
         GameObject gameobject = Instantiate(playerPrefab, start.position, start.rotation);
+        
         // Apply data from the message however appropriate for your game
         // Typically Player would be a component you write with syncvars or properties
         Player player = gameobject.GetComponent<Player>();
