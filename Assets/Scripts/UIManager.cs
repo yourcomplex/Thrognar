@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 using System.Collections.Generic;
 
@@ -9,35 +10,13 @@ using System.Collections.Generic;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class BattleManager : NetworkBehaviour
+public class UIManager : NetworkBehaviour
 {
 
-    public readonly SyncList<Player> players = new SyncList<Player>();
-    public readonly SyncList<BattleChar> battleChars = new SyncList<BattleChar>();
-        
+    public Button abilityAButton;
 
-    public static BattleManager instance;
-
-    public UIManager uiManager;    
-
-
-    [SyncVar]
-    public int turnCount = 0;
-
-    [SyncVar]
-    public int moveCount = 0;
-
-    [SyncVar]
-    public Player activePlayer;
-
-    [SyncVar]
-    public BattleChar activeBattleChar;
-
-    void Update()
-    {
-
-    }
-
+    public GameObject menu;
+    public GameObject abilitySelector;
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -45,8 +24,9 @@ public class BattleManager : NetworkBehaviour
     /// <para>This could be triggered by NetworkServer.Listen() for objects in the scene, or by NetworkServer.Spawn() for objects that are dynamically created.</para>
     /// <para>This will be called for objects on a "host" as well as for object on a dedicated server.</para>
     /// </summary>
-    public override void OnStartServer()
+    public override void OnStartServer() 
     {
+
     }
 
     /// <summary>
@@ -59,18 +39,11 @@ public class BattleManager : NetworkBehaviour
     /// Called on every NetworkBehaviour when it is activated on a client.
     /// <para>Objects on the host have this function called, as there is a local client on the host. The values of SyncVars on object are guaranteed to be initialized correctly with the latest state from the server when this function is called on the client.</para>
     /// </summary>
-    public override void OnStartClient()
+    public override void OnStartClient() 
     {
-        instance = this;
-        //Debug.Log("Assigned Battle Manager instance");
-
-        //menu = GameObject.FindWithTag("Menu");
-        //Debug.Log("Assigned Menu to Battle Manager");
-
-        //abilitySelector = GameObject.FindWithTag("AbilitySelector");
-        //abilitySelector.SetActive(false);
-        //Debug.Log("Assigned Ability Selector to Battle Manager");
-
+        BattleManager.instance.uiManager = this;
+        abilitySelector.SetActive(false);
+        abilityAButton.onClick.AddListener(AbilityAPress);
     }
 
     /// <summary>
@@ -83,11 +56,7 @@ public class BattleManager : NetworkBehaviour
     /// Called when the local player object has been set up.
     /// <para>This happens after OnStartClient(), as it is triggered by an ownership message from the server. This is an appropriate place to activate components or functionality that should only be active for the local player, such as cameras and input.</para>
     /// </summary>
-    public override void OnStartLocalPlayer()
-    {
-
-
-    }
+    public override void OnStartLocalPlayer() { }
 
     /// <summary>
     /// This is invoked on behaviours that have authority, based on context and <see cref="NetworkIdentity.hasAuthority">NetworkIdentity.hasAuthority</see>.
@@ -104,27 +73,41 @@ public class BattleManager : NetworkBehaviour
 
     #endregion
 
-    
-    public void BattleStart()
+    public void AbilityAPress()
     {
-        Debug.Log("Battle Start");
-        turnCount = 0;
-        NextTurn();
+        Debug.Log("You pressed the ABILITY A button.");
+        //BattleManager.instance.activePlayer.CmdSelectAbility();
+        //BattleManager.instance.activePlayer.CmdSelectTarget();
+        //BattleManager.instance.activePlayer.CmdActOnTarget();
+        //BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
     }
 
-    
-    public void NextTurn()
+    public void AbilityBPress()
     {
-        turnCount++;
-        Debug.Log("Turn " + turnCount);
-        moveCount = 0;
-        activeBattleChar = battleChars[moveCount];
-        activePlayer = activeBattleChar.owner;
+        Debug.Log("You pressed the ABILITY B button.");
     }
 
+    public void AbilityCPress()
+    {
+        Debug.Log("You pressed the ABILITY C button.");
+    }
 
+    public void AbilityDPress()
+    {
+        Debug.Log("You pressed the ABILITY D button.");
+    }
 
+    public void AbilityEPress()
+    {
+        Debug.Log("You pressed the ABILITY E button.");
+    }
 
+    public void AbilityFPress()
+    {
+        Debug.Log("You pressed the ABILITY F button.");
+    }
 
 
 }

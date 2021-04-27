@@ -12,7 +12,10 @@ using System;
 
 public class Player : NetworkBehaviour
 {
+
+    public GameObject uiManagerPrefab;
     public GameObject battleCharPrefab;
+
     public Transform[] charSpawns;
 
     [SyncVar]
@@ -24,26 +27,31 @@ public class Player : NetworkBehaviour
     public Ability[] abilities;
 
     [SyncVar]
-    public Player target;
+    public BattleChar target;
 
     [SyncVar]
     public Ability selectedAbility;
 
-    void LateUpdate()
+    void Update()
     {
-        if (isLocalPlayer && BattleManager.instance.activePlayer)
+        
+        if (isLocalPlayer && BattleManager.instance.activeBattleChar != null)
         {
+            //Debug.Log("Clear 1");
 
-            if (BattleManager.instance.activePlayer == this)
+            if (BattleManager.instance.activeBattleChar.owner == this)
             {
-                BattleManager.instance.menu.SetActive(true);
+                BattleManager.instance.uiManager.menu.SetActive(true);
+                //Debug.Log("Clear 2");
             }
             else
             {
-                BattleManager.instance.menu.SetActive(false);
-                BattleManager.instance.abilitySelector.SetActive(false);
+                BattleManager.instance.uiManager.menu.SetActive(false);
+                BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+                //Debug.Log("Else 2");
             }
         }
+        
     }
 
 
@@ -72,8 +80,14 @@ public class Player : NetworkBehaviour
     /// </summary>
     public override void OnStartClient()
     {
+        /*
+        Transform start = gameObject.GetComponent<Transform>();
+        GameObject uiManager = Instantiate(uiManagerPrefab, start.position, start.rotation);
+        Debug.Log("Instantiated UI Manager prefab");
 
-
+        NetworkServer.Spawn(uiManager); //pass conn to spawn with authority
+        Debug.Log("Spawned uiManager prefab");
+        */
     }
 
     /// <summary>
@@ -137,12 +151,16 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdEndMove()
     {
-        Debug.Log("You have pressed the FIGHT button.");
+        Debug.Log("Ending Move");
+
 
         BattleManager.instance.moveCount++;
 
-        if (BattleManager.instance.moveCount < BattleManager.instance.players.Count)
-            BattleManager.instance.activePlayer = BattleManager.instance.players[BattleManager.instance.moveCount];
+        if (BattleManager.instance.moveCount < BattleManager.instance.battleChars.Count)
+        {
+            BattleManager.instance.activeBattleChar = BattleManager.instance.battleChars[BattleManager.instance.moveCount];
+            BattleManager.instance.activePlayer = BattleManager.instance.activeBattleChar.owner;
+        }
         else
             BattleManager.instance.NextTurn();
     }
@@ -150,19 +168,19 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSelectTarget()
     {
-        for (int i=0; i<BattleManager.instance.players.Count; i++)
+        for (int i=0; i<BattleManager.instance.battleChars.Count; i++)
         {
             // Selects the player that is not this player as the target
             // Only works for two players, need to update for additional players
-            if (BattleManager.instance.players[i] != this)
-                target = BattleManager.instance.players[i];
+            if (BattleManager.instance.battleChars[i].owner != this)
+                target = BattleManager.instance.battleChars[i];
         }
     }
 
     [Command]
     public void CmdSelectAbility()
     {
-        selectedAbility = BattleManager.instance.activePlayer.abilities[0];
+        selectedAbility = BattleManager.instance.activeBattleChar.abilities[0];
     }
 
     [Command]
@@ -170,7 +188,7 @@ public class Player : NetworkBehaviour
     public void CmdActOnTarget()
     {
         Debug.Log("Acting on Target");
-        float multiplier = BattleManager.instance.activePlayer.strenth / BattleManager.instance.activePlayer.target.defense;
-        BattleManager.instance.activePlayer.target.health += Convert.ToInt32(Math.Floor(multiplier * BattleManager.instance.activePlayer.selectedAbility.healthEffect));
+        float multiplier = BattleManager.instance.activeBattleChar.strenth / BattleManager.instance.activeBattleChar.target.defense;
+        BattleManager.instance.activeBattleChar.target.health += Convert.ToInt32(Math.Floor(multiplier * BattleManager.instance.activeBattleChar.selectedAbility.healthEffect));
     }
 }

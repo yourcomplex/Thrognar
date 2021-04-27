@@ -12,8 +12,8 @@ public class NetworkManagerThrog : NetworkManager
 
     public Transform leftPlayerSpawn;
     public Transform rightPlayerSpawn;
-    public GameObject menuPrefab;
-    public GameObject abilitySelectorPrefab;
+    public GameObject uiManagerPrefab;
+
 
     public struct CreatePlayerMessage : NetworkMessage
     {
@@ -138,7 +138,10 @@ public class NetworkManagerThrog : NetworkManager
     /// <para>Unity calls this on the Server when a Client connects to the Server. Use an override to tell the NetworkManager what to do when a client connects to the server.</para>
     /// </summary>
     /// <param name="conn">Connection from client.</param>
-    public override void OnServerConnect(NetworkConnection conn) { }
+    public override void OnServerConnect(NetworkConnection conn) 
+    { 
+
+    }
 
     /// <summary>
     /// Called on the server when a client is ready.
@@ -182,8 +185,7 @@ public class NetworkManagerThrog : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
-        NetworkServer.RegisterHandler<CreatePlayerMessage>(OnCreatePlayer);
-        
+
         CreatePlayerMessage playerMessage = new CreatePlayerMessage
         {
             playerNo = numPlayers + 1
@@ -230,6 +232,8 @@ public class NetworkManagerThrog : NetworkManager
     public override void OnStartServer() 
     {
         base.OnStartServer();
+
+        NetworkServer.RegisterHandler<CreatePlayerMessage>(OnCreatePlayer);
     }
 
     /// <summary>
@@ -269,22 +273,15 @@ public class NetworkManagerThrog : NetworkManager
         Player player = gameobject.GetComponent<Player>();
         player.playerNo = numPlayers + 1;
 
-        GameObject menu = Instantiate(menuPrefab, start.position, start.rotation);
-        Debug.Log("Instantiated Menu prefab");
-
-        GameObject abilitySelector = Instantiate(abilitySelectorPrefab, start.position, start.rotation);
-        Debug.Log("Instantiated Ability Selector prefab");
-
+        GameObject uiManager = Instantiate(uiManagerPrefab, start.position, start.rotation);
+        Debug.Log("Instantiated UI Manager prefab");
 
         // call this to use this gameobject as the primary controller
         NetworkServer.AddPlayerForConnection(conn, gameobject);
 
+        NetworkServer.Spawn(uiManager, conn); //pass conn to spawn with authority
+        Debug.Log("Spawned uiManager prefab");
 
-        NetworkServer.Spawn(menu, conn); //pass conn to spawn with authority
-        Debug.Log("Spawned Menu prefab");
-
-        NetworkServer.Spawn(abilitySelector, conn); //pass conn to spawn with authority
-        Debug.Log("Spawned Ability Selector prefab");
 
     }
 
