@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class AbilitySelector : UIManager
+public class AbilitySelector : MonoBehaviour
 {
 
     void Start()
