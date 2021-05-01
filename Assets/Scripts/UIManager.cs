@@ -76,7 +76,7 @@ public class UIManager : NetworkBehaviour
     public void AbilityAPress()
     {
         Debug.Log("You pressed the ABILITY A button.");
-        //BattleManager.instance.activePlayer.CmdSelectAbility();
+        BattleManager.instance.activePlayer.CmdSelectAbility();
         //BattleManager.instance.activePlayer.CmdSelectTarget();
         //BattleManager.instance.activePlayer.CmdActOnTarget();
         //BattleManager.instance.uiManager.abilitySelector.SetActive(false);

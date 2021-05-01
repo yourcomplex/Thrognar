@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 using System.Collections.Generic;
 
@@ -9,34 +10,10 @@ using System.Collections.Generic;
 
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
-public class BattleManager : NetworkBehaviour
+public class CharNameText : NetworkBehaviour
 {
 
-    public readonly SyncList<Player> players = new SyncList<Player>();
-    public readonly SyncList<BattleChar> battleChars = new SyncList<BattleChar>();
-        
-
-    public static BattleManager instance;
-
-    public UIManager uiManager;    
-
-
-    [SyncVar]
-    public int turnCount = 0;
-
-    [SyncVar]
-    public int moveCount = 0;
-
-    [SyncVar]
-    public Player activePlayer;
-
-    [SyncVar]
-    public BattleChar activeBattleChar;
-
-    void Update()
-    {
-
-    }
+    public Text charName;
 
     #region Start & Stop Callbacks
 
@@ -45,9 +22,7 @@ public class BattleManager : NetworkBehaviour
     /// <para>This could be triggered by NetworkServer.Listen() for objects in the scene, or by NetworkServer.Spawn() for objects that are dynamically created.</para>
     /// <para>This will be called for objects on a "host" as well as for object on a dedicated server.</para>
     /// </summary>
-    public override void OnStartServer()
-    {
-    }
+    public override void OnStartServer() { }
 
     /// <summary>
     /// Invoked on the server when the object is unspawned
@@ -59,10 +34,7 @@ public class BattleManager : NetworkBehaviour
     /// Called on every NetworkBehaviour when it is activated on a client.
     /// <para>Objects on the host have this function called, as there is a local client on the host. The values of SyncVars on object are guaranteed to be initialized correctly with the latest state from the server when this function is called on the client.</para>
     /// </summary>
-    public override void OnStartClient()
-    {
-        instance = this;
-    }
+    public override void OnStartClient() { }
 
     /// <summary>
     /// This is invoked on clients when the server has caused this object to be destroyed.
@@ -74,11 +46,7 @@ public class BattleManager : NetworkBehaviour
     /// Called when the local player object has been set up.
     /// <para>This happens after OnStartClient(), as it is triggered by an ownership message from the server. This is an appropriate place to activate components or functionality that should only be active for the local player, such as cameras and input.</para>
     /// </summary>
-    public override void OnStartLocalPlayer()
-    {
-
-
-    }
+    public override void OnStartLocalPlayer() { }
 
     /// <summary>
     /// This is invoked on behaviours that have authority, based on context and <see cref="NetworkIdentity.hasAuthority">NetworkIdentity.hasAuthority</see>.
@@ -94,28 +62,4 @@ public class BattleManager : NetworkBehaviour
     public override void OnStopAuthority() { }
 
     #endregion
-
-    
-    public void BattleStart()
-    {
-        Debug.Log("Battle Start");
-        turnCount = 0;
-        NextTurn();
-    }
-
-    
-    public void NextTurn()
-    {
-        turnCount++;
-        Debug.Log("Turn " + turnCount);
-        moveCount = 0;
-        activeBattleChar = battleChars[moveCount];
-        activePlayer = activeBattleChar.owner;
-    }
-
-
-
-
-
-
 }

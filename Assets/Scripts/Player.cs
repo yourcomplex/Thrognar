@@ -80,14 +80,6 @@ public class Player : NetworkBehaviour
     /// </summary>
     public override void OnStartClient()
     {
-        /*
-        Transform start = gameObject.GetComponent<Transform>();
-        GameObject uiManager = Instantiate(uiManagerPrefab, start.position, start.rotation);
-        Debug.Log("Instantiated UI Manager prefab");
-
-        NetworkServer.Spawn(uiManager); //pass conn to spawn with authority
-        Debug.Log("Spawned uiManager prefab");
-        */
     }
 
     /// <summary>
@@ -136,24 +128,24 @@ public class Player : NetworkBehaviour
     {
         for (int i = 0; i <= 2; i++)
         {
-            
             GameObject battleCharObject = Instantiate(battleCharPrefab, charSpawns[i].position, charSpawns[i].rotation);
             Debug.Log("Instantiated BattleChar prefab");
             BattleChar battleChar = battleCharObject.GetComponent<BattleChar>();
             BattleManager.instance.battleChars.Add(battleChar);
             battleChar.owner = this;
+            battleChar.charNo = BattleManager.instance.battleChars.Count;
+            battleChar.charName = "Player " + battleChar.charNo;
             NetworkServer.Spawn(battleCharObject);
             Debug.Log("Spawned BattleChar prefab");
+            
+            
         }
-
     }
 
     [Command]
     public void CmdEndMove()
     {
         Debug.Log("Ending Move");
-
-
         BattleManager.instance.moveCount++;
 
         if (BattleManager.instance.moveCount < BattleManager.instance.battleChars.Count)
@@ -180,7 +172,8 @@ public class Player : NetworkBehaviour
     [Command]
     public void CmdSelectAbility()
     {
-        selectedAbility = BattleManager.instance.activeBattleChar.abilities[0];
+        
+        BattleManager.instance.activeBattleChar.selectedAbility = BattleManager.instance.activeBattleChar.abilities[0];
     }
 
     [Command]

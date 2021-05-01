@@ -15,6 +15,12 @@ public class BattleChar : NetworkBehaviour
     [SyncVar]
     public int health, strenth, defense, speed, range, charge;
 
+    [SyncVar]
+    public string charName;
+
+    [SyncVar]
+    public int charNo;
+
     public Ability[] abilities;
 
     [SyncVar]
@@ -25,6 +31,10 @@ public class BattleChar : NetworkBehaviour
 
     [SyncVar]
     public Player owner;
+
+    public GameObject charNameTextPrefab;
+
+    //public Transform charNameTransform;
 
     #region Start & Stop Callbacks
 
@@ -50,13 +60,21 @@ public class BattleChar : NetworkBehaviour
     /// </summary>
     public override void OnStartClient() 
     { 
-        //BattleManager.instance.battleChars.Add(this);
         // Flips the second player object so it faces left
         SpriteRenderer spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         if (this.owner.playerNo == 2)
         {
             spriteRenderer.flipX = true;
         }
+        Transform transform = gameObject.GetComponent<Transform>();
+        GameObject charNameTextObject = Instantiate(charNameTextPrefab, transform.position, transform.rotation);
+        charNameTextObject.transform.position = new Vector2(charNameTextObject.transform.position.x, charNameTextObject.transform.position.y + 0.75f);
+        //GameObject charNameTextObject = Instantiate(charNameTextPrefab, charNameTransform.position, charNameTransform.rotation);
+        Debug.Log("Instantiated CharNameText prefab");
+        CharNameText charNameText = charNameTextObject.GetComponent<CharNameText>();
+        charNameText.charName.text = "Player " + charNo;
+        //NetworkServer.Spawn(charNameTextObject);
+        Debug.Log("Spawned CharNameText prefab");
     }
 
     /// <summary>
