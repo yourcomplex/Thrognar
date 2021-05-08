@@ -10,20 +10,13 @@ using System.Collections.Generic;
 // NOTE: Do not put objects in DontDestroyOnLoad (DDOL) in Awake.  You can do that in Start instead.
 
 public class Menu : MonoBehaviour
-{
 
+{
     void Start()
     {
         BattleManager.instance.uiManager.menu = gameObject;
-        gameObject.SetActive(false);
     }
 
-    public void FightPress()
-    {
-        BattleManager.instance.uiManager.menu.SetActive(false);
-        BattleManager.instance.uiManager.abilitySelector.SetActive(true);
-        Debug.Log("You pressed the FIGHT button.");
-    }
     
 }
 

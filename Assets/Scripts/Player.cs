@@ -41,13 +41,12 @@ public class Player : NetworkBehaviour
 
             if (BattleManager.instance.activeBattleChar.owner == this)
             {
-                BattleManager.instance.uiManager.menu.SetActive(true);
+                BattleManager.instance.uiManagerObject.SetActive(true);
                 //Debug.Log("Clear 2");
             }
             else
             {
-                BattleManager.instance.uiManager.menu.SetActive(false);
-                BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+                BattleManager.instance.uiManagerObject.SetActive(false);     
                 //Debug.Log("Else 2");
             }
         }
@@ -158,22 +157,15 @@ public class Player : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSelectTarget()
+    public void CmdSelectTarget(int charIndex)
     {
-        for (int i=0; i<BattleManager.instance.battleChars.Count; i++)
-        {
-            // Selects the player that is not this player as the target
-            // Only works for two players, need to update for additional players
-            if (BattleManager.instance.battleChars[i].owner != this)
-                target = BattleManager.instance.battleChars[i];
-        }
+        BattleManager.instance.activeBattleChar.target = BattleManager.instance.battleChars[charIndex];
     }
 
     [Command]
-    public void CmdSelectAbility()
+    public void CmdSelectAbility(int abilityIndex)
     {
-        
-        BattleManager.instance.activeBattleChar.selectedAbility = BattleManager.instance.activeBattleChar.abilities[0];
+        BattleManager.instance.activeBattleChar.selectedAbility = BattleManager.instance.activeBattleChar.abilities[abilityIndex];
     }
 
     [Command]

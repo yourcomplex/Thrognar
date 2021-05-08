@@ -18,8 +18,8 @@ public class BattleManager : NetworkBehaviour
 
     public static BattleManager instance;
 
-    public UIManager uiManager;    
-
+    public UIManager uiManager;
+    public GameObject uiManagerObject;        
 
     [SyncVar]
     public int turnCount = 0;
@@ -62,6 +62,8 @@ public class BattleManager : NetworkBehaviour
     public override void OnStartClient()
     {
         instance = this;
+
+
     }
 
     /// <summary>
@@ -109,8 +111,12 @@ public class BattleManager : NetworkBehaviour
         turnCount++;
         Debug.Log("Turn " + turnCount);
         moveCount = 0;
+        //if(activeBattleChar)
+            //BattleManager.instance.activeBattleChar.charNameText.charName.color = new Color(255,255,255,255);
         activeBattleChar = battleChars[moveCount];
+
         activePlayer = activeBattleChar.owner;
+        //BattleManager.instance.activeBattleChar.charNameText.charName.color = new Color(98,255,0,255);
     }
 
 

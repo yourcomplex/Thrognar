@@ -15,6 +15,28 @@ public class CharNameText : NetworkBehaviour
 
     public Text charName;
 
+    void Update()
+    {
+        
+        if (BattleManager.instance.activeBattleChar != null)
+        {
+            //Debug.Log("Clear 1");
+
+            if (BattleManager.instance.activeBattleChar.charNameText == this)
+            {
+                this.charName.color = new Color(98,255,0,255);
+                //Debug.Log("Clear 2");
+            }
+            else
+            {
+                this.charName.color = new Color(255,255,255,255);
+                //Debug.Log("Else 2");
+            }
+        }
+        
+    }
+
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -34,7 +56,9 @@ public class CharNameText : NetworkBehaviour
     /// Called on every NetworkBehaviour when it is activated on a client.
     /// <para>Objects on the host have this function called, as there is a local client on the host. The values of SyncVars on object are guaranteed to be initialized correctly with the latest state from the server when this function is called on the client.</para>
     /// </summary>
-    public override void OnStartClient() { }
+    public override void OnStartClient() 
+    { 
+    }
 
     /// <summary>
     /// This is invoked on clients when the server has caused this object to be destroyed.
@@ -62,4 +86,5 @@ public class CharNameText : NetworkBehaviour
     public override void OnStopAuthority() { }
 
     #endregion
+
 }

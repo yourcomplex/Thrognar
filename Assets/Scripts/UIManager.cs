@@ -13,10 +13,15 @@ using System.Collections.Generic;
 public class UIManager : NetworkBehaviour
 {
 
-    public Button abilityAButton;
+    public Button fightButton;
+    public Button abilityAButton, abilityBButton, abilityCButton, abilityDButton, abilityEButton, abilityFButton;
+    public Button targetAButton, targetBButton, targetCButton, targetDButton, targetEButton, targetFButton; 
+    
 
     public GameObject menu;
     public GameObject abilitySelector;
+    public GameObject targetSelector;
+
     #region Start & Stop Callbacks
 
     /// <summary>
@@ -41,9 +46,29 @@ public class UIManager : NetworkBehaviour
     /// </summary>
     public override void OnStartClient() 
     {
+        gameObject.SetActive(false);
         BattleManager.instance.uiManager = this;
-        abilitySelector.SetActive(false);
+        BattleManager.instance.uiManagerObject = gameObject;
+
+        //abilitySelector.SetActive(false);
+        //targetSelector.SetActive(false);
+
+        fightButton.onClick.AddListener(FightButtonPress);      
+        
         abilityAButton.onClick.AddListener(AbilityAPress);
+        abilityBButton.onClick.AddListener(AbilityBPress);
+        abilityCButton.onClick.AddListener(AbilityCPress);
+        abilityDButton.onClick.AddListener(AbilityDPress);
+        abilityEButton.onClick.AddListener(AbilityEPress);
+        abilityFButton.onClick.AddListener(AbilityFPress);
+
+        targetAButton.onClick.AddListener(TargetAPress);
+        targetBButton.onClick.AddListener(TargetBPress);
+        targetCButton.onClick.AddListener(TargetCPress);
+        targetDButton.onClick.AddListener(TargetDPress);
+        targetEButton.onClick.AddListener(TargetEPress);
+        targetFButton.onClick.AddListener(TargetFPress);
+
     }
 
     /// <summary>
@@ -73,41 +98,114 @@ public class UIManager : NetworkBehaviour
 
     #endregion
 
+
+    public void FightButtonPress()
+    {
+        BattleManager.instance.uiManager.menu.SetActive(false);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(true);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(true);
+        Debug.Log("You pressed the FIGHT button.");
+    }
     public void AbilityAPress()
     {
         Debug.Log("You pressed the ABILITY A button.");
-        BattleManager.instance.activePlayer.CmdSelectAbility();
-        //BattleManager.instance.activePlayer.CmdSelectTarget();
-        //BattleManager.instance.activePlayer.CmdActOnTarget();
-        //BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdSelectAbility(0);
         BattleManager.instance.uiManager.abilitySelector.SetActive(false);
-        BattleManager.instance.activePlayer.CmdEndMove();
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
     public void AbilityBPress()
     {
         Debug.Log("You pressed the ABILITY B button.");
+        BattleManager.instance.activePlayer.CmdSelectAbility(1);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
     public void AbilityCPress()
     {
         Debug.Log("You pressed the ABILITY C button.");
+        BattleManager.instance.activePlayer.CmdSelectAbility(2);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
     public void AbilityDPress()
     {
         Debug.Log("You pressed the ABILITY D button.");
+        BattleManager.instance.activePlayer.CmdSelectAbility(3);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
     public void AbilityEPress()
     {
         Debug.Log("You pressed the ABILITY E button.");
+        BattleManager.instance.activePlayer.CmdSelectAbility(4);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
     public void AbilityFPress()
     {
         Debug.Log("You pressed the ABILITY F button.");
+        BattleManager.instance.activePlayer.CmdSelectAbility(5);
+        BattleManager.instance.uiManager.abilitySelector.SetActive(false);
+        BattleManager.instance.uiManager.targetSelector.SetActive(true);
     }
 
+    public void TargetAPress()
+    {
+        Debug.Log("You pressed the TARGET A button.");
+        BattleManager.instance.activePlayer.CmdSelectTarget(0);
+        BattleManager.instance.activePlayer.CmdActOnTarget();
+        BattleManager.instance.uiManager.targetSelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
+        BattleManager.instance.uiManager.menu.SetActive(true);
+    }
+    public void TargetBPress()
+        {
+            Debug.Log("You pressed the TARGET A button.");
+            BattleManager.instance.activePlayer.CmdSelectTarget(1);
+            BattleManager.instance.activePlayer.CmdActOnTarget();
+            BattleManager.instance.uiManager.targetSelector.SetActive(false);
+            BattleManager.instance.activePlayer.CmdEndMove();
+    }
+    public void TargetCPress()
+    {
+        Debug.Log("You pressed the TARGET A button.");
+        BattleManager.instance.activePlayer.CmdSelectTarget(2);
+        BattleManager.instance.activePlayer.CmdActOnTarget();
+        BattleManager.instance.uiManager.targetSelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
+    }
+    public void TargetDPress()
+    {
+        Debug.Log("You pressed the TARGET A button.");
+        BattleManager.instance.activePlayer.CmdSelectTarget(3);
+        BattleManager.instance.activePlayer.CmdActOnTarget();
+        BattleManager.instance.uiManager.targetSelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
+    }
+    public void TargetEPress()
+    {
+        Debug.Log("You pressed the TARGET A button.");
+        BattleManager.instance.activePlayer.CmdSelectTarget(4);
+        BattleManager.instance.activePlayer.CmdActOnTarget();
+        BattleManager.instance.uiManager.targetSelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
+    }
+    public void TargetFPress()
+    {
+        Debug.Log("You pressed the TARGET A button.");
+        BattleManager.instance.activePlayer.CmdSelectTarget(5);
+        BattleManager.instance.activePlayer.CmdActOnTarget();
+        BattleManager.instance.uiManager.targetSelector.SetActive(false);
+        BattleManager.instance.activePlayer.CmdEndMove();
+    }
 
+    public void SetAbilityButtons()
+    {
+        //abilityAButton.text = BattleManager.instance.activeBattleChar.abilities[0].abilityName;    
+    }
 }

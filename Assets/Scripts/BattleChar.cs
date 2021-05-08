@@ -24,7 +24,7 @@ public class BattleChar : NetworkBehaviour
     public Ability[] abilities;
 
     [SyncVar]
-    public Player target;
+    public BattleChar target;
 
     [SyncVar]
     public Ability selectedAbility;
@@ -32,9 +32,9 @@ public class BattleChar : NetworkBehaviour
     [SyncVar]
     public Player owner;
 
-    public GameObject charNameTextPrefab;
+    public CharNameText charNameText;
 
-    //public Transform charNameTransform;
+    public GameObject charNameTextPrefab;
 
     #region Start & Stop Callbacks
 
@@ -69,12 +69,9 @@ public class BattleChar : NetworkBehaviour
         Transform transform = gameObject.GetComponent<Transform>();
         GameObject charNameTextObject = Instantiate(charNameTextPrefab, transform.position, transform.rotation);
         charNameTextObject.transform.position = new Vector2(charNameTextObject.transform.position.x, charNameTextObject.transform.position.y + 0.75f);
-        //GameObject charNameTextObject = Instantiate(charNameTextPrefab, charNameTransform.position, charNameTransform.rotation);
         Debug.Log("Instantiated CharNameText prefab");
-        CharNameText charNameText = charNameTextObject.GetComponent<CharNameText>();
+        charNameText = charNameTextObject.GetComponent<CharNameText>();
         charNameText.charName.text = "Player " + charNo;
-        //NetworkServer.Spawn(charNameTextObject);
-        Debug.Log("Spawned CharNameText prefab");
     }
 
     /// <summary>
